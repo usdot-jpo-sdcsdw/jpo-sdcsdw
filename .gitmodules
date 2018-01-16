@@ -1,0 +1,27 @@
+[submodule "tim-db"]
+	path = tim-db
+	url = https://github.com/usdot-jpo-sdcsdw/tim-db
+[submodule "credentials-db"]
+	path = credentials-db
+	url = https://github.com/usdot-jpo-sdcsdw/credentials-db
+[submodule "fedgov-cv-webapp-websocket"]
+	path = fedgov-cv-webapp-websocket
+	url = https://github.com/usdot-jpo-sdcsdw/fedgov-cv-webapp-websocket
+[submodule "fedgov-cv-whtools-webapp"]
+	path = fedgov-cv-whtools-webapp
+	url = https://github.com/usdot-jpo-sdcsdw/fedgov-cv-whtools-webapp
+[submodule "fedgov-cv-sso-webapp"]
+	path = fedgov-cv-sso-webapp
+	url = https://github.com/usdot-jpo-sdcsdw/fedgov-cv-sso-webapp
+[submodule "fedgov-cv-message-validator-webapp"]
+	path = fedgov-cv-message-validator-webapp
+	url = https://github.com/usdot-jpo-sdcsdw/fedgov-cv-message-validator-webapp
+[submodule "common-models"]
+	path = common-models
+	url = https://github.com/usdot-jpo-sdcsdw/common-models
+[submodule "udp-interface"]
+	path = udp-interface
+	url = https://github.com/usdot-jpo-sdcsdw/udp-interface
+[submodule "per-xer-codec"]
+	path = per-xer-codec
+	url = https://github.com/usdot-jpo-sdcsdw/per-xer-codec
