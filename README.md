@@ -36,8 +36,8 @@ later query for that data.
 ### Source Repositories - GitHub
 
 * Main repository on GitHub (public)
-    * TBD
-    * TBD
+    * https://github.com/usdot-jpo-sdcsdw/jpo-sdcsdw
+    * git@github.com:usdot-jpo-sdcsdw/jpo-sdcsdw.git
 
 ### Agile Project Managment - Jira
 
