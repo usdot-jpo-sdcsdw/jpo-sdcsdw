@@ -91,7 +91,7 @@ The following instructions describe the procedure to fetch, build, and run the a
 Clone the source code from the GitHub Repository using Git Command:
 
 ```bash
-git clone --recurse-submodules TBD
+git clone --recurse-submodules https://github.com/usdot-jpo-sdcsdw/jpo-sdcsdw
 ```
 
 Note: Make sure you specify the --recurse-submodules option on the clone command line. This option will cause the cloning of all dependent submodules:
