@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>gov.usdot</groupId>
+    <artifactId>jpo-sdcsdw</artifactId>
+    <name>Connected Vehicle Situation Data Clearinghouse/Situation Data Warehouse</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+      <module>common-models</module>
+      <module>per-xer-codec</module>
+      <module>fedgov-cv-message-validator-webapp</module>
+      <module>fedgov-cv-sso-webapp</module>
+      <module>fedgov-cv-webapp-websocket</module>
+      <module>fedgov-cv-whtools-webapp</module>
+      <module>udp-interface</module>
+    </modules>
+</project>
