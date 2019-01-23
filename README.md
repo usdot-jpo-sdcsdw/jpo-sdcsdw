@@ -102,23 +102,66 @@ Note: Make sure you specify the --recurse-submodules option on the clone command
 
 The SDC/SDW uses Maven to manage builds
 
-**Step 1**: Generate ASN.1 Code
+**Step 1**: Add ASN.1 Specification files
 
 For more information on this process, please see the documenation for the [PER XER Codec](per-xer-codec/README.md)
 
 ```bash
-cd per-xer-codex/asn1-codegen
-make directories
 cp ... per-xer-codec/asn1-codegen/src/asn1/
-make all install
-cd ../..
 ```
 
 **Step 2**: Build the maven artifacts
 
+When buliding, you will need to provide the urls that the artifacts will be deployed at. The three URLs you will need to provide are:
+
+##### cas.server.login.url
+
+The login url for the CAS in the property cas.server.login.url, e.g. https://my.cas.com/login
+
+##### cas.server.prefix.url
+
+The url prefix for the CAS in the property cas.server.prefix.url, e.g. https://my.cas.com/
+
+##### whtools.server.prefix.url
+
+The url prefix for the Warehouse Tools Server in the property whtools.server.prefix.url, e.g. https://my.whtools.com/
+
+
 ```bash
-mvn install
+mvn install -Dcas.server.login.url=... -Dcas.server.prefix.url=... -Dwhtools.server.prefix.url=...
 ```
+
+In addition to providing properties to specify these three URLs, additional properties can be provided to control the build process:
+
+##### build.with.docker
+
+```bash
+mvn install -Dbuild.with.docker
+mvn install -Dbuild.with.docker=cygwin
+```
+
+Set this property to any string to enable building the artifacts (as well as
+generate and build the ASN.1 codec) within a docker container. This requires
+a running docker daemon as well as an install docker client configured to use
+that daemon.
+
+On windows, if you are running under a linux-like shell, such as cygwin, mingw,
+git-bash, etc, set this property to "cygwin", otherwise you will experience odd
+errors.
+
+Note that unless are you running under a linux OS, the produced ASN.1 codec
+binary will not be usable on your local system, and will only be runnable under
+linux or another docker container.
+
+##### per-xer-codec.SkipAutogen
+
+```bash
+mvn install -Dper-xer-codec.SkipAutogen=true
+```
+
+Set this property to "true" to skip re-generating the ASN.1 codec C code. If you'
+have not already generated this code, this will cause the build to fail with
+unexpected error messages.
 
 **Step 3**: Configure docker images
 
@@ -131,36 +174,6 @@ Edit [build-docker-images.env](build-docker-images.env) to set the image names a
 ```
 
 See the README's for each sub-project for information on configuring specific images.
-
-#### Building docker images on non-linux systems
-
-Building docker images on non-linux systems is not currently automated to the same
-degree, due to the need to build a linux shared object file from the PER XER Codec.
-If you are building and deploying natively, these steps are uncessary, but if you
-intend to build docker images on anything other than linux, you will need to perform
-these additional steps.
-
-**Step 1**: Manually build PerXerCodec
-
-After completing step 1 from the main build sequence, use make to build the shared object
-inside of a docker container.
-
-```bash
-cd per-xer-codec/native
-make all install
-cd ../..
-```
-
-**Step 2**: Manually copy shared object
-
-After completing step 2 from the main build sequence, copy the shared object file to the necessary directories
-
-```bash
-cp per-xer-codec/java/target/libper-xer-codec.so fedgov-cv-message-validator-webapp/target/
-cp per-xer-codec/java/target/libper-xer-codec.so fedgov-cv-whtools-webapp/target/
-```
-
-From here, you can continue with step 3 of the main build sequence.
 
 ### Deploy the Application
 
