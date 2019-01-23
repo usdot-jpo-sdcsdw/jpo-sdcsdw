@@ -197,7 +197,13 @@ Edit [build-docker-images.env](build-docker-images.env) to set the image names a
 **Step 4**: Build docker images
 
 ```bash
+# Linux/MacOS/Cygwin/MinGW/Git-bash bash
 ./build-docker-imges.sh
+```
+
+```cmd.exe
+REM Windows command prompt
+build-docker-images.bat
 ```
 
 See the README's for each sub-project for information on configuring specific images.
