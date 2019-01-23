@@ -179,6 +179,16 @@ property if you are building the system on a non-posix system. This also means
 that unit tests will be unable to execute during the build, to prevent this from
 failing the build, add the `-Dmaven.test.skip=true` argument.
 
+###### cygwin.install.root
+
+```bash
+-Dcygwin.install.root=C:\Path\To\Cygwin\
+```
+
+When building on windows using cygwin/mingw/git-bash, etc, by default, the build
+system assumes your installation root is `C:\Program Files\Git`. Set this
+property to specify a different root path.
+
 
 ###### per-xer-codec.SkipAutogen
 
