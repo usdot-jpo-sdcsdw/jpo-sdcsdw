@@ -98,6 +98,11 @@ Note: Make sure you specify the --recurse-submodules option on the clone command
 
 ### Build the Application
 
+NOTE: Due to [limitations in Windows](https://support.microsoft.com/en-us/help/830473/command-prompt-cmd-exe-command-line-string-limitation),
+the system cannot be built normally on Windows, and cannot run on Windows. See
+the section on "build.with.docker" for an explanation the impact on the build
+process, and how to build non-Windows versions of system while still on Windows.
+
 #### Build Process
 
 The SDC/SDW uses Maven to manage builds
@@ -112,32 +117,47 @@ cp ... per-xer-codec/asn1-codegen/src/asn1/
 
 **Step 2**: Build the maven artifacts
 
-When buliding, you will need to provide the urls that the artifacts will be deployed at. The three URLs you will need to provide are:
+```bash
+mvn install [-Dparameter=value]...
+```
 
-##### cas.server.login.url
+##### Required Build Parameters
 
-The login url for the CAS in the property cas.server.login.url, e.g. https://my.cas.com/login
+When building, you will need to provide the urls that the artifacts will be deployed at. The three URLs you will need to provide are:
 
-##### cas.server.prefix.url
-
-The url prefix for the CAS in the property cas.server.prefix.url, e.g. https://my.cas.com/
-
-##### whtools.server.prefix.url
-
-The url prefix for the Warehouse Tools Server in the property whtools.server.prefix.url, e.g. https://my.whtools.com/
-
+###### cas.server.login.url
 
 ```bash
-mvn install -Dcas.server.login.url=... -Dcas.server.prefix.url=... -Dwhtools.server.prefix.url=...
+-Dcas.server.login.url=https://my.cas.com/login
 ```
+
+The login url for the CAS, e.g. https://my.cas.com/login
+
+###### cas.server.prefix.url
+
+```bash
+-Dcas.server.prefix.url=https://my.cas.com/
+```
+
+The url prefix for the CAS, e.g. https://my.cas.com/
+
+###### whtools.server.prefix.url
+
+```bash
+-Dwhtools.server.prefix.url=https://my.whtools.com/
+```
+
+The url prefix for the Warehouse Tools Server, e.g. https://my.whtools.com/
+
+##### Optional Build Parameters
 
 In addition to providing properties to specify these three URLs, additional properties can be provided to control the build process:
 
-##### build.with.docker
+###### build.with.docker
 
 ```bash
-mvn install -Dbuild.with.docker
-mvn install -Dbuild.with.docker=cygwin
+-Dbuild.with.docker=true
+-Dbuild.with.docker=cygwin
 ```
 
 Set this property to any string to enable building the artifacts (as well as
@@ -153,10 +173,17 @@ Note that unless are you running under a linux OS, the produced ASN.1 codec
 binary will not be usable on your local system, and will only be runnable under
 linux or another docker container.
 
-##### per-xer-codec.SkipAutogen
+NOTE: Due to the command length limitation of the windows command shell, it is
+currently impossible to build the system natively on windows. You must use this
+property if you are building the system on a non-posix system. This also means
+that unit tests will be unable to execute during the build, to prevent this from
+failing the build, add the `-Dmaven.test.skip=true` argument.
+
+
+###### per-xer-codec.SkipAutogen
 
 ```bash
-mvn install -Dper-xer-codec.SkipAutogen=true
+-Dper-xer-codec.SkipAutogen=true
 ```
 
 Set this property to "true" to skip re-generating the ASN.1 codec C code. If you'
