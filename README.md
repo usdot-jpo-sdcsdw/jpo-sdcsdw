@@ -68,6 +68,9 @@ The following instructions describe the procedure to fetch, build, and run the a
 * Git: https://git-scm.com/
 * Docker: https://www.docker.com/get-docker
 * Make: https://www.gnu.org/software/make/
+* Autotools: https://www.gnu.org/software/automake/manual/html_node/index.html#Top
+* Docker: https://www.docker.com/get-started
+    * Optional if building on MacOS or Linux and not planning on deploying the system in Docker
 
 ---
 
