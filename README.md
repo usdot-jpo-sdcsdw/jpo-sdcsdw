@@ -120,7 +120,7 @@ For more information on this process, please see the documenation for the [PER X
 cp ... per-xer-codec/asn1-codegen/src/asn1/
 ```
 
-**Step 2**: Build the maven artifacts
+**Step 2**: Build using maven
 
 ```bash
 mvn install [-Dparameter=value]...
@@ -205,21 +205,39 @@ Set this property to "true" to skip re-generating the ASN.1 codec C code. If you
 have not already generated this code, this will cause the build to fail with
 unexpected error messages.
 
-**Step 3**: Configure docker images
-
-Edit [build-docker-images.env](build-docker-images.env) to set the image names and versions appropriately.
-
-**Step 4**: Build docker images
+###### sdcsdw.skipDocker
 
 ```bash
-# Linux/MacOS/Cygwin/MinGW/Git-bash bash
-./build-docker-imges.sh
+-Dsdcsdw.skipDocker=true
 ```
 
-```cmd.exe
-REM Windows command prompt
-build-docker-images.bat
+By default, the build system will build the five docker images for the system.
+If you do not have a docker daemon accessible, or simply wish to skip this step,
+set this property to "true".
+
+Note that the docker images require a linux binary artifact from the
+per-xer-codec, if you are building on Windows or MacOS in a non-docker mode,
+this will cause the build to fail if you have not previously built this
+artifact.
+
+######## sdcsdw.docker.repository
+
+```bash
+-Dsdcsdw.docker.repository=my-custom-docker-repo.com:8080/
 ```
+
+This property allows you to add a prefix to the docker image repository, for
+example, to specify a remote URL (such as Amazon ECR). By default, this
+property is blank, meaning that the image will be restricted to daemon it is
+built on.
+
+###### sdcsdw.docker.tag
+```bash
+-Dsdcsdw.docker.tag=1.2.3-SNAPSHOT
+```
+
+Set this property to specify the tag of the docker images. By default, this is
+set to "testing" to prevent accidental overwriting or collision.
 
 See the README's for each sub-project for information on configuring specific images.
 
