@@ -69,6 +69,8 @@ The following instructions describe the procedure to fetch, build, and run the a
 * Docker: https://www.docker.com/get-docker
 * Make: https://www.gnu.org/software/make/
 * Autotools: https://www.gnu.org/software/automake/manual/html_node/index.html#Top
+* Clang: https://clang.llvm.org/ (MacOS, Linux)
+* GCC: http://gcc.gnu.org/ (Windows)
 * Docker: https://www.docker.com/get-started
     * Optional if building on MacOS or Linux and not planning on deploying the system in Docker
 
