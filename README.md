@@ -178,7 +178,7 @@ Note that unless are you running under a linux OS, the produced ASN.1 codec
 binary will not be usable on your local system, and will only be runnable under
 linux or another docker container.
 
-NOTE: Due to the command length limitation of the windows command shell, it is
+**NOTE**: Due to the command length limitation of the windows command shell, it is
 currently impossible to build the system natively on windows. You must use this
 property if you are building the system on a non-posix system. This also means
 that unit tests will be unable to execute during the build, to prevent this from
@@ -220,7 +220,7 @@ per-xer-codec, if you are building on Windows or MacOS in a non-docker mode,
 this will cause the build to fail if you have not previously built this
 artifact.
 
-######## sdcsdw.docker.repository
+###### sdcsdw.docker.repository
 
 ```bash
 -Dsdcsdw.docker.repository=my-custom-docker-repo.com:8080/
