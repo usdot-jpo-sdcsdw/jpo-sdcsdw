@@ -241,6 +241,18 @@ set to "testing" to prevent accidental overwriting or collision.
 
 See the README's for each sub-project for information on configuring specific images.
 
+##### Note for building docker containers behind a HTTP proxy
+
+If you are building the system's docker containers while having your HTTP_PROXY
+and related variables set, you may encounter an error similar to the following:
+
+```bash
+Jan 28, 2019 1:27:26 PM com.spotify.docker.client.shaded.org.apache.http.impl.execchain.RetryExec execute
+INFO: I/O exception (com.spotify.docker.client.shaded.org.apache.http.NoHttpResponseException) caught when processing request to {}->http://proxy-east.aero.org:8080->unix://localhost:80: The target server failed to respond
+```
+
+To solve this, add the `-Ddockerfile.useProxy=false` argument.
+
 ### Deploy the Application
 
 From here, please follow the [deployment guide](https://usdotjposdcsdw.atlassian.net/wiki/spaces/SDCSDW/pages/34340865/AWS+Bootstrap+Deployment) on the wiki
