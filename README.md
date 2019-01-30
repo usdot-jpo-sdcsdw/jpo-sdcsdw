@@ -195,10 +195,10 @@ system assumes your installation root is `C:\Program Files\Git`. Set this
 property to specify a different root path.
 
 
-###### per-xer-codec.SkipAutogen
+###### per-xer-codec.skipAutogen
 
 ```bash
--Dper-xer-codec.SkipAutogen=true
+-Dper-xer-codec.skipAutogen=true
 ```
 
 Set this property to "true" to skip re-generating the ASN.1 codec C code. If you'
