@@ -20,6 +20,8 @@
   <modules>
     <module>common-models</module>
     <module>per-xer-codec</module>
+    <module>tim-db</module>
+    <module>credentials-db</module>
     <module>fedgov-cv-message-validator-webapp</module>
     <module>fedgov-cv-sso-webapp</module>
     <module>fedgov-cv-webapp-websocket</module>
