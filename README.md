@@ -130,37 +130,9 @@ cp ... per-xer-codec/asn1-codegen/src/asn1/
 mvn install [-Dparameter=value]...
 ```
 
-##### Required Build Parameters
-
-When building, you will need to provide the urls that the artifacts will be deployed at. The three URLs you will need to provide are:
-
-###### cas.server.login.url
-
-```bash
--Dcas.server.login.url=https://my.cas.com/login
-```
-
-The login url for the CAS, e.g. https://my.cas.com/login
-
-###### cas.server.prefix.url
-
-```bash
--Dcas.server.prefix.url=https://my.cas.com/
-```
-
-The url prefix for the CAS, e.g. https://my.cas.com/
-
-###### whtools.server.prefix.url
-
-```bash
--Dwhtools.server.prefix.url=https://my.whtools.com/
-```
-
-The url prefix for the Warehouse Tools Server, e.g. https://my.whtools.com/
-
 ##### Optional Build Parameters
 
-In addition to providing properties to specify these three URLs, additional properties can be provided to control the build process:
+These properties can be provided to control the build process:
 
 ###### build.with.docker
 
