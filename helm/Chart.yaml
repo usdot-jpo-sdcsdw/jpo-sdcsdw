@@ -1,0 +1,4 @@
+apiVersion: v1
+name: sdcsdw
+version: 1.2.0
+#kubeVersion:

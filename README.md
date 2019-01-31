@@ -73,6 +73,10 @@ The following instructions describe the procedure to fetch, build, and run the a
 * GCC: http://gcc.gnu.org/ (Windows)
 * Docker: https://www.docker.com/get-started
     * Optional if building on MacOS or Linux and not planning on deploying the system in Docker
+* Kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl/ (If deploying)
+* Helm: https://docs.helm.sh/using_helm/ (If deploying)
+* Minikube: https://kubernetes.io/docs/setup/minikube/ (If deploying locally)
+
 
 ---
 
@@ -253,6 +257,200 @@ INFO: I/O exception (com.spotify.docker.client.shaded.org.apache.http.NoHttpResp
 
 To solve this, add the `-Ddockerfile.useProxy=false` argument.
 
-### Deploy the Application
+### Deploy the Application on Kubernetes
 
-From here, please follow the [deployment guide](https://usdotjposdcsdw.atlassian.net/wiki/spaces/SDCSDW/pages/34340865/AWS+Bootstrap+Deployment) on the wiki
+**Step 0**: Deploy Cluster
+
+The SDC/SDW is designed to run on Kubernetes, you will need to have access to a
+kubernetes cluster with tiller (helm) installed.
+
+If you wish to deploy locally, you may use minikube.
+
+**Step 1**: Configure Services
+
+To configure the SDC/SDW for deployment, edit (or copy) the file at `helm/values.yaml`.
+
+#### Configuration Values
+
+##### use\_load\_balancer
+
+Set to true to deploy services using load balancers. Support depends on your
+cluster's configuration, however Minikube will not support this.
+
+##### credentials\_db.image
+
+Docker image to use for the credentials database.
+
+##### credentials\_db.tag
+
+Tag for docker image to use for the credentials database.
+
+##### credentials\_db.db\_name
+
+Name of the database to store user credentials in.
+
+##### credentials\_db.username
+
+Username to connect to the credentials database.
+
+##### credentials\_db.password\_secret.name
+
+Name of the secret storing the password to connect to the database with.
+
+##### credentials\_db.password\_secret.key
+
+Key in the secret containing the password to connect to the database with.
+
+##### credentials\_db.port.mysql
+
+Port to connect to the credentials database with internally.
+
+##### cas.image
+
+Docker image to use for the central authentication server.
+
+##### cas.tag
+
+Tag for docker image to use for the central authentication server.
+
+##### cas.hostname
+
+Hostname users will connect to the central authentication server at. For
+minikube, this will be the minikube's ip. For a deployed cluster, this will be
+the domain name you have registered.
+
+##### cas.port.http
+
+Port users will connect to the central authentication server on for HTTP.
+For minikube, this will need to be a unique, available NodePort.
+
+##### cas.port.http
+
+Port users will connect to the central authentication server on for HTTPS.
+For minikube, this will need to be a unique, available NodePort.
+
+##### message\_validator.image
+
+Docker image to use for the message validator webapp.
+
+##### message\_validator.tag
+
+Tag for docker image to use for the message validator webapp.
+
+##### message\_validator.hostname
+
+Hostname users will connect to the message validator webapp at. For
+minikube, this will be the minikube's ip. For a deployed cluster, this will be
+the domain name you have registered.
+
+##### message\_validator.port.http
+
+Port users will connect to the message validator webapp on for HTTP.
+For minikube, this will need to be a unique, available NodePort.
+
+##### message\_validator.port.http
+
+The port users will connect to the message validator webapp on for HTTPS
+For minikube, this will need to be a unique, available NodePort.
+
+##### tim\_db.image
+
+Docker image to use for the TIM database.
+
+##### tim\_db.tag
+
+Tag for docker image to use for the TIM database.
+
+##### tim\_db.db\_name
+
+Name of the database to store TIMs in.
+
+##### tim\_db.collection\_name
+
+Name of the collection to store TIMs in.
+
+##### tim\_db.system\_name
+
+This is an artifact from the legacy system. The value of this field will be the
+value of the "systemName" field in a request to the warehouse tools
+websockets/REST interface.
+
+##### tim\_db.port.mongodb
+
+Port to connect to the TIM database with internally.
+
+##### whtools.image
+
+Docker image to use for the warehouse tools webapp.
+
+##### whtools.tag
+
+Tag for docker image to use for the warehouse tools webapp.
+
+##### whtools.hostname
+
+Hostname users will connect to the warehouse tools webapp at. For
+minikube, this will be the minikube's ip. For a deployed cluster, this will be
+the domain name you have registered.
+
+##### whtools.port.http
+
+Port users will connect to the warehouse tools webapp on for HTTP.
+For minikube, this will need to be a unique, available NodePort.
+
+##### whtools.port.http
+
+Port users will connect to the warehouse tools webapp on for HTTPS
+For minikube, this will need to be a unique, available NodePort.
+
+##### ssl.jetty\_keystore\_secret.name
+
+Name of the secret containing the SSL/TLS certificates in JKS format.
+
+##### ssl.jetty\_keystore\_secret.key
+
+Key in the secret containing the SSL/TLS certificates in JKS format.
+
+##### ssl.jetty\_keystore\_password\_secret.name
+
+Name of the secret containing the password for the SSL/TLS certificates in JKS format.
+
+##### ssl.jetty\_keystore\_password\_secret.key
+
+Key in the secret containing the password for the SSL/TLS certificates in JKS format.
+
+**Step 2** Configure Secrets
+
+The SDC/SDW makes use of three kubernetes-managed secrets:
+* Java Keystore (JKS) containing SSL/TLS certificates
+* Password to SSL/TLS certificate keystore
+* Password for accessing the credentials database
+
+If you have secrets for these values already, edit the `helm/values.yaml` file
+to specify the names and keys of these secrets in the appropriate fields.
+
+If you need to create these secrets, you may do so by hand using kubectl, but
+a convenience python script `./create-secrets.py` is provided which will
+examine your `helm/values.yaml` file and create the secrets appropriately. See
+the usage message for `./create-secrets.py` for more information.
+
+**Step 3** Deploy with Helm
+
+Decide on a name (<name>) for your deployment, optionally a namespace
+(<namespace>) to deploy it in. If you opted to create a new values.yaml file
+instead of editing the existing one, you will need to provide the path to that
+file (<path/to/values.yaml>). When you are ready, execute the following command:
+
+```bash
+helm install --name <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
+```
+
+### Update the Deployment
+
+If you need to update your deployment, for example, upgrading a component to a
+new container version, edit your `values.yaml` file once more, then execute the
+following command:
+
+```bash
+helm upgrade <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
+```
