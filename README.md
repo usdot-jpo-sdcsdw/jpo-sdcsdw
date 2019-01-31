@@ -391,6 +391,14 @@ Name of the secret containing the password for the SSL/TLS certificates in JKS f
 
 Key in the secret containing the password for the SSL/TLS certificates in JKS format.
 
+##### ssl.trust\_keystore
+
+Set to true to have the warehouse tools manually trust its own SSL/TLS
+certificates.
+This is necessary if you are using self-signed certificates, or your root CA is
+not part of the default java trust store.
+
+
 **Step 2** Configure Secrets
 
 The SDC/SDW makes use of three kubernetes-managed secrets:
