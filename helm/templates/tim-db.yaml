@@ -55,3 +55,4 @@ spec:
       resources:
         requests:
           storage: 10Gi
+      storageClassName: {{.Values.credentials_db.storage_class_name}}

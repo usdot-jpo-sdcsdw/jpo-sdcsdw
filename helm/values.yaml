@@ -2,6 +2,7 @@ use_load_balancer: false
 credentials_db:
   image: localhost:5000/dotcv/credentials-db
   tag: testing
+  storage_class_name: hostpath
   db_name: cas
   username: root
   password_secret:
@@ -25,16 +26,17 @@ message_validator:
     https: 32704
 tim_db:
   image: localhost:5000/dotcv/tim-db
+  storage_class_name: hostpath
   tag: testing
   db_name: cvdb
   collection_name: travelerInformation
-  system_name: "SDW 2.3"
   port:
     mongodb: 27017
 whtools:
   image: localhost:5000/dotcv/whtools-webapp
   tag: testing
   hostname: 192.168.64.35
+  system_name: "SDW 2.3"
   port:
     http: 32705
     https: 32706
