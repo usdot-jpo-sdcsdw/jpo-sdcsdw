@@ -427,10 +427,10 @@ the usage message for `./create-secrets.py` for more information.
 
 **Step 3** Deploy with Helm
 
-Decide on a name (<name>) for your deployment, optionally a namespace
-(<namespace>) to deploy it in. If you opted to create a new values.yaml file
+Decide on a name (&lt;name&gt;) for your deployment, optionally a namespace
+(&lt;namespace&gt;) to deploy it in. If you opted to create a new values.yaml file
 instead of editing the existing one, you will need to provide the path to that
-file (<path/to/values.yaml>). When you are ready, execute the following command:
+file (&lt;path/to/values.yaml&gt;). When you are ready, execute the following command:
 
 ```bash
 helm install --name <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
