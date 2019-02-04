@@ -13,14 +13,14 @@ credentials_db:
 cas:
   image: localhost:5000/dotcv/sso-webapp
   tag: testing
-  hostname: 192.168.64.35
+  hostname: 192.168.1.1
   port:
     http: 32701
     https: 32702
 message_validator:
   image: localhost:5000/dotcv/message-validator-webapp
   tag: testing
-  hostname: 192.168.64.35
+  hostname: 192.168.1.1
   port:
     http: 32703
     https: 32704
@@ -36,7 +36,7 @@ whtools:
   image: localhost:5000/dotcv/whtools-webapp
   tag: testing
   system_name: "SDW 2.3"
-  hostname: 192.168.64.35
+  hostname: 192.168.1.1
   port:
     http: 32705
     https: 32706
