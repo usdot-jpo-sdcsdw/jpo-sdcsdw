@@ -66,6 +66,7 @@ The following instructions describe the procedure to fetch, build, and run the a
 * JDK 1.8: http://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html
 * Maven: https://maven.apache.org/install.html
 * Git: https://git-scm.com/
+* OpenSSL: https://www.openssl.org/ (If creating self-signed certificates)
 * Docker: https://www.docker.com/get-docker
 * Make: https://www.gnu.org/software/make/
 * Autotools: https://www.gnu.org/software/automake/manual/html_node/index.html#Top
@@ -427,8 +428,6 @@ the usage message for `./create-secrets.py` for more information.
 
 If you need to create a self-signed certificate keystore, see [This Document](doc/ssl.md) for
 instructions.
-
-
 
 **Step 3** Deploy with Helm
 
