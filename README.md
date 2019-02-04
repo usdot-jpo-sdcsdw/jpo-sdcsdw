@@ -75,7 +75,7 @@ The following instructions describe the procedure to fetch, build, and run the a
     * Optional if building on MacOS or Linux and not planning on deploying the system in Docker
 * Kubectl: https://kubernetes.io/docs/tasks/tools/install-kubectl/ (If deploying)
 * Helm: https://docs.helm.sh/using_helm/ (If deploying)
-* Minikube: https://kubernetes.io/docs/setup/minikube/ (If deploying locally)
+* Minikube: https://kubernetes.io/docs/setup/minikube/ (If deploying locally on linux)
 
 
 ---
@@ -236,7 +236,8 @@ To solve this, add the `-Ddockerfile.useProxy=false` argument.
 The SDC/SDW is designed to run on Kubernetes, you will need to have access to a
 kubernetes cluster with tiller (helm) installed.
 
-If you wish to deploy locally, you may use minikube.
+If you wish to deploy locally, you may use minikube, or the built-in kubernetes
+cluster in docker-for-mac and docker-for-windows.
 
 **Step 1**: Configure Services
 
@@ -256,6 +257,11 @@ Docker image to use for the credentials database.
 ##### credentials\_db.tag
 
 Tag for docker image to use for the credentials database.
+
+##### credentials\_db.storage\_class\_name
+
+Name of the storage class to use to provision the persistent volume for the
+credentials database.
 
 ##### credentials\_db.db\_name
 
@@ -333,6 +339,11 @@ Docker image to use for the TIM database.
 
 Tag for docker image to use for the TIM database.
 
+##### credentials\_db.storage\_class\_name
+
+Name of the storage class to use to provision the persistent volume for the
+TIM database.
+
 ##### tim\_db.db\_name
 
 Name of the database to store TIMs in.
@@ -340,12 +351,6 @@ Name of the database to store TIMs in.
 ##### tim\_db.collection\_name
 
 Name of the collection to store TIMs in.
-
-##### tim\_db.system\_name
-
-This is an artifact from the legacy system. The value of this field will be the
-value of the "systemName" field in a request to the warehouse tools
-websockets/REST interface.
 
 ##### tim\_db.port.mongodb
 
@@ -358,6 +363,12 @@ Docker image to use for the warehouse tools webapp.
 ##### whtools.tag
 
 Tag for docker image to use for the warehouse tools webapp.
+
+##### whtools.system\_name
+
+This is an artifact from the legacy system. The value of this field will be the
+value of the "systemName" field in a request to the warehouse tools
+websockets/REST interface.
 
 ##### whtools.hostname
 
