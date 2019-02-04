@@ -425,6 +425,11 @@ a convenience python script `./create-secrets.py` is provided which will
 examine your `helm/values.yaml` file and create the secrets appropriately. See
 the usage message for `./create-secrets.py` for more information.
 
+If you need to create a self-signed certificate keystore, see [This Document](doc/ssl.md) for
+instructions.
+
+
+
 **Step 3** Deploy with Helm
 
 Decide on a name (&lt;name&gt;) for your deployment, optionally a namespace
