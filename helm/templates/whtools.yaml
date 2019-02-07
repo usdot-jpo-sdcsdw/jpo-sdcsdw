@@ -5,16 +5,6 @@ kind: ConfigMap
 metadata:
   name: config-json
 data:
-  move-configs.sh: |
-    #!/bin/bash
-    SOURCE_DIR=$CONFIG_GATEWAY
-    TARGET_DIR=$JETTY_BASE/config
-    #mkdir -p $TARGET_DIR
-    #echo "Moving configs from $SOURCE_DIR (" `ls $SOURCE_DIR` ") to $TARGET_DIR"
-    #CONFIGS_TO_MOVE='mongo.json'
-    #for CONFIG in $CONFIGS_TO_MOVE; do mv $SOURCE_DIR/$CONFIG $TARGET_DIR/$CONFIG; done
-    ln -s $SOURCE_DIR $TARGET_DIR
-    
   mongo.json: |
     [{
       "systemName": "{{.Values.whtools.system_name}}",
@@ -65,9 +55,11 @@ spec:
             memory: 500Mi
         volumeMounts:
           - name: ssl-keystore
-            mountPath: /usr/local/jetty/etc/keystore_mount
+            mountPath: /var/lib/jetty/etc/keystore
+            subPath: keystore
           - name: config-json
-            mountPath: /usr/local/jetty/config
+            mountPath: /var/lib/jetty/config/mongo.json
+            subPath: mongo.json
         readinessProbe:
           httpGet:
             scheme: HTTPS
