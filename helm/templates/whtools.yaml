@@ -64,9 +64,9 @@ spec:
           httpGet:
             scheme: HTTPS
             port: 8443
-            path: /whtools
+            path: /whtools/rest/v2/health
           initialDelaySeconds: 5
-          periodSeconds: 1
+          periodSeconds: 30
       volumes:
       - name: ssl-keystore
         secret:
