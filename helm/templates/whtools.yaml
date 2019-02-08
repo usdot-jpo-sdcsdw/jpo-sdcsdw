@@ -49,6 +49,8 @@ spec:
           value: https://{{.Values.whtools.hostname}}:{{.Values.whtools.port.https}}
         - name: TRUST_KEYSTORE
           value: {{if .Values.ssl.trust_keystore}} '1' {{else}} '' {{end}}
+        - name: MONGO_CONFIG_FILE
+          value: /var/lib/jetty/config/mongo.json
         resources:
           requests:
             cpu: 100m
