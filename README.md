@@ -437,7 +437,9 @@ to specify the names and keys of these secrets in the appropriate fields.
 If you need to create these secrets, you may do so by hand using kubectl, but
 a convenience python script `helm/scripts/create-secrets.py` is provided which will
 examine your `helm/values.yaml` file and create the secrets appropriately. See
-the usage message for `helm/scripts/create-secrets.py` for more information.
+the usage message for `helm/scripts/create-secrets.py` for more information. To
+use `./create-secrets.py`, it is necessary to import the pyaml package (i.e.,
+`pip install pyaml`).
 
 If you need to create a self-signed certificate keystore, see [This Document](doc/ssl.md) for
 instructions.
