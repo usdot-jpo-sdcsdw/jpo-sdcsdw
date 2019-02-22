@@ -457,3 +457,10 @@ following command:
 ```bash
 helm upgrade <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
 ```
+
+### Adding users
+
+Currently, adding users to the credentials database is a manual process. However,
+a script is provided at `helm/add-user.py` to perform the necessary commands
+through kubernetes. See the usage message for this script for details on how to
+use it.
