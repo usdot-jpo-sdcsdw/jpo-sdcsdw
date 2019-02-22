@@ -34,3 +34,6 @@
 	path = per-xer-codec
 	url = https://github.com/usdot-jpo-sdcsdw/per-xer-codec
 	branch = .
+[submodule "fedgov-cv-webfragment-rest"]
+	path = fedgov-cv-webfragment-rest
+	url = https://github.com/usdot-jpo-sdcsdw/fedgov-cv-webfragment-rest.git

@@ -33,13 +33,16 @@ spec:
             secretKeyRef:
               name: {{.Values.credentials_db.password_secret.name}}
               key: {{.Values.credentials_db.password_secret.key}}
+        - name: TRUST_KEYSTORE
+          value: {{if .Values.ssl.trust_keystore}} '1' {{else}} '' {{end}}
         resources:
           requests:
             cpu: 100m
             memory: 500Mi
         volumeMounts:
           - name: ssl-keystore
-            mountPath: /usr/local/jetty/etc/keystore_mount
+            mountPath: /var/lib/jetty/etc/keystore
+            subPath: keystore
         readinessProbe:
           httpGet:
             scheme: HTTPS

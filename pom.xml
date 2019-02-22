@@ -25,6 +25,7 @@
     <module>fedgov-cv-message-validator-webapp</module>
     <module>fedgov-cv-sso-webapp</module>
     <module>fedgov-cv-webapp-websocket</module>
+    <module>fedgov-cv-webfragment-rest</module>
     <module>fedgov-cv-whtools-webapp</module>
     <module>udp-interface</module>
   </modules>
