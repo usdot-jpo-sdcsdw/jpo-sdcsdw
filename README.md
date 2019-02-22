@@ -250,7 +250,12 @@ cluster in docker-for-mac and docker-for-windows.
 
 **Step 1**: Configure Services
 
-To configure the SDC/SDW for deployment, edit (or copy) the file at `helm/values.yaml`.
+To configure the SDC/SDW for deployment, create a `values.yaml` file, it is
+recommended to create this file at `helm/values.yaml`. Two sample files are
+provided for you at `helm/values.minikube.example.yaml` and
+`helm/values.prod.example.yaml`. These templates are designed to run either on a
+local cluster, or a production cluster deployed in a cloud environment,
+respectively.
 
 #### Configuration Values
 
@@ -430,10 +435,11 @@ If you have secrets for these values already, edit the `helm/values.yaml` file
 to specify the names and keys of these secrets in the appropriate fields.
 
 If you need to create these secrets, you may do so by hand using kubectl, but
-a convenience python script `./create-secrets.py` is provided which will
+a convenience python script `helm/scripts/create-secrets.py` is provided which will
 examine your `helm/values.yaml` file and create the secrets appropriately. See
-the usage message for `./create-secrets.py` for more information. To use `./create-secrets.py`,
-it is necessary to import the pyaml package (i.e., `pip install pyaml`).
+the usage message for `helm/scripts/create-secrets.py` for more information. To
+use `./create-secrets.py`, it is necessary to import the pyaml package (i.e.,
+`pip install pyaml`).
 
 If you need to create a self-signed certificate keystore, see [This Document](doc/ssl.md) for
 instructions.
@@ -458,3 +464,10 @@ following command:
 ```bash
 helm upgrade <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
 ```
+
+### Adding users
+
+Currently, adding users to the credentials database is a manual process. However,
+a script is provided at `helm/scripts/add-user.py` to perform the necessary commands
+through kubernetes. See the usage message for this script for details on how to
+use it.
