@@ -250,7 +250,12 @@ cluster in docker-for-mac and docker-for-windows.
 
 **Step 1**: Configure Services
 
-To configure the SDC/SDW for deployment, edit (or copy) the file at `helm/values.yaml`.
+To configure the SDC/SDW for deployment, create a `values.yaml` file, it is
+recommended to create this file at `helm/values.yaml`. Two sample files are
+provided for you at `helm/values.minikube.example.yaml` and
+`helm/values.prod.example.yaml`. These templates are designed to run either on a
+local cluster, or a production cluster deployed in a cloud environment,
+respectively.
 
 #### Configuration Values
 
