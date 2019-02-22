@@ -430,9 +430,9 @@ If you have secrets for these values already, edit the `helm/values.yaml` file
 to specify the names and keys of these secrets in the appropriate fields.
 
 If you need to create these secrets, you may do so by hand using kubectl, but
-a convenience python script `./create-secrets.py` is provided which will
+a convenience python script `helm/scripts/create-secrets.py` is provided which will
 examine your `helm/values.yaml` file and create the secrets appropriately. See
-the usage message for `./create-secrets.py` for more information.
+the usage message for `helm/scripts/create-secrets.py` for more information.
 
 If you need to create a self-signed certificate keystore, see [This Document](doc/ssl.md) for
 instructions.
@@ -461,6 +461,6 @@ helm upgrade <name> [--namespace=<namespace>] [-f <path/to/values.yaml>] helm/
 ### Adding users
 
 Currently, adding users to the credentials database is a manual process. However,
-a script is provided at `helm/add-user.py` to perform the necessary commands
+a script is provided at `helm/scripts/add-user.py` to perform the necessary commands
 through kubernetes. See the usage message for this script for details on how to
 use it.
