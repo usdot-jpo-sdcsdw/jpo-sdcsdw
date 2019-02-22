@@ -1,0 +1,119 @@
+---
+# Config Map providing files that need to be inserted at container start time
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-json
+data:
+  move-configs.sh: |
+    #!/bin/bash
+    SOURCE_DIR=$CONFIG_GATEWAY
+    TARGET_DIR=$JETTY_BASE/config
+    #mkdir -p $TARGET_DIR
+    #echo "Moving configs from $SOURCE_DIR (" `ls $SOURCE_DIR` ") to $TARGET_DIR"
+    #CONFIGS_TO_MOVE='mongo.json'
+    #for CONFIG in $CONFIGS_TO_MOVE; do mv $SOURCE_DIR/$CONFIG $TARGET_DIR/$CONFIG; done
+    ln -s $SOURCE_DIR $TARGET_DIR
+    
+  mongo.json: |
+    [{
+      "systemName": "{{.Values.whtools.system_name}}",
+      "host": "tim-db.{{.Release.Namespace}}.svc.cluster.local",
+      "port": {{.Values.tim_db.port.mongodb}},
+      "database": "{{.Values.tim_db.db_name}}",
+      "collectionName" : "{{.Values.tim_db.collection_name}}"
+    }]
+---
+# Deployment providing the Warehouse Tools and Websockets Interface
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: whtools
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: whtools
+      annotations:
+    spec:
+      containers:
+      - name: whtools
+        image: '{{.Values.whtools.image}}:{{.Values.whtools.tag}}'
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        env:
+        - name: JETTY_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.ssl.jetty_keystore_password_secret.name}}
+              key: {{.Values.ssl.jetty_keystore_password_secret.key}}
+        - name: JETTY_KEYSTORE_TRUSTSTORE_EXPORT_ALIASES
+          value: $SELF_SIGNED_CERT_ALIASES
+        - name: CAS_SERVER_LOGIN_URL
+          value: https://{{.Values.cas.hostname}}:{{.Values.cas.port.https}}/accounts/login
+        - name: CAS_SERVER_PREFIX_URL
+          value: https://{{.Values.cas.hostname}}:{{.Values.cas.port.https}}/accounts/
+        - name: WHTOOLS_SERVER_PREFIX_URL
+          value: https://{{.Values.whtools.hostname}}:{{.Values.whtools.port.https}}
+        - name: TRUST_KEYSTORE
+          value: {{if .Values.ssl.trust_keystore}} '1' {{else}} '' {{end}}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        volumeMounts:
+          - name: ssl-keystore
+            mountPath: /usr/local/jetty/etc/keystore_mount
+          - name: config-json
+            mountPath: /usr/local/jetty/config
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            port: 8443
+            path: /whtools
+          initialDelaySeconds: 5
+          periodSeconds: 1
+      volumes:
+      - name: ssl-keystore
+        secret:
+          secretName: {{.Values.ssl.jetty_keystore_secret.name}}
+          items:
+          - key: {{.Values.ssl.jetty_keystore_secret.key}}
+            path: keystore
+      - name: config-json
+        configMap:
+          name: config-json
+---
+# Service exposing the warehouse tools and websockets interface on HTTP(S)
+apiVersion: v1
+kind: Service
+metadata:
+  name: whtools
+  {{if .Values.use_load_balancer}}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: 10.0.1.0/24
+  {{end}}
+spec:
+  {{if .Values.use_load_balancer}}
+  type: LoadBalancer
+  ports:
+  - name: whtools-http
+    port: {{.Values.whtools.port.http}}
+    targetPort: 8080
+  - name: whtools-https
+    port: {{.Values.whtools.port.https}}
+    targetPort: 8443
+  {{else}}
+  type: NodePort
+  ports:
+  - name: whtools-http
+    nodePort: {{.Values.whtools.port.http}}
+    port: 8080
+  - name: whtools-https
+    nodePort: {{.Values.whtools.port.https}}
+    port: 8443
+  {{end}}
+  selector:
+    app: whtools

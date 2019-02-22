@@ -1,0 +1,58 @@
+---
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: tim-db
+spec:
+  ports:
+  - port: {{.Values.tim_db.port.mongodb}}
+  # [podname].tim-db.<namespace>.svc.cluster.local
+  clusterIP: None
+  selector:
+    app: tim-db
+---
+# Stateful set providing MongoDB for storing TIMs
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: tim-db
+spec:
+  replicas: 1
+  serviceName: tim-db
+  template:
+    metadata:
+      annotations: null
+      labels:
+        app: tim-db
+    spec:
+      containers:
+      - image: '{{.Values.tim_db.image}}:{{.Values.tim_db.tag}}'
+        name: tim-db
+        ports:
+        - containerPort: {{.Values.tim_db.port.mongodb}}
+        readinessProbe:
+          exec:
+            command:
+            - mongo
+            - {{.Values.tim_db.db_name}}
+            - '--eval'
+            - 'db.{{.Values.tim_db.collection_name}}.find({});'
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /data/db
+          name: data
+          readOnly: false
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: {{.Values.credentials_db.storage_class_name}}

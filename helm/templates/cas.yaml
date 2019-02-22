@@ -1,0 +1,88 @@
+---
+# Deployment providing the Central Authentication Server (CAS)
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: cas
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cas
+      annotations:
+    spec:
+      containers:
+      - name: cas
+        image: '{{.Values.cas.image}}:{{.Values.cas.tag}}'
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        env:
+        - name: JETTY_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.ssl.jetty_keystore_password_secret.name}}
+              key: {{.Values.ssl.jetty_keystore_password_secret.key}}
+        - name: SSO_AUTH_MYSQL_URL
+          value: jdbc:mysql://credentials-db.{{.Release.Namespace}}.svc.cluster.local:{{.Values.credentials_db.port.mysql}}/{{.Values.credentials_db.db_name}}?useSSL=false
+        - name: SSO_AUTH_MYSQL_USERNAME
+          value: {{.Values.credentials_db.username}}
+        - name: SSO_AUTH_MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.credentials_db.password_secret.name}}
+              key: {{.Values.credentials_db.password_secret.key}}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        volumeMounts:
+          - name: ssl-keystore
+            mountPath: /usr/local/jetty/etc/keystore_mount
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            port: 8443
+            path: /accounts
+          initialDelaySeconds: 5
+          periodSeconds: 1
+      volumes:
+      - name: ssl-keystore
+        secret:
+          secretName: {{.Values.ssl.jetty_keystore_secret.name}}
+          items:
+          - key: {{.Values.ssl.jetty_keystore_secret.key}}
+            path: keystore
+---
+# Service exposing the CAS HTTP(S)
+apiVersion: v1
+kind: Service
+metadata:
+  name: cas-rest
+  {{if .Values.use_load_balancer}}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: 10.0.1.0/24
+  {{end}}
+spec:
+  {{if .Values.use_load_balancer}}
+  type: LoadBalancer
+  ports:
+  - name: cas-rest-http
+    port: {{.Values.cas.port.http}}
+    targetPort: 8080
+  - name: cas-rest-https
+    port: {{.Values.cas.port.https}}
+    targetPort: 8443
+  {{else}}
+  type: NodePort
+  ports:
+  - name: cas-rest-http
+    nodePort: {{.Values.cas.port.http}}
+    port: 8080
+  - name: cas-rest-https
+    nodePort: {{.Values.cas.port.https}}
+    port: 8443
+  {{end}}
+  selector:
+    app: cas

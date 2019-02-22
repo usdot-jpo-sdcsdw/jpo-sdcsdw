@@ -1,0 +1,79 @@
+---
+# Deployment providing a ASN.1 message validator GUI
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: message-validator
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: message-validator
+      annotations:
+    spec:
+      containers:
+      - name: whtools
+        image: '{{.Values.message_validator.image}}:{{.Values.message_validator.tag}}'
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        env:
+        - name: JETTY_KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{.Values.ssl.jetty_keystore_password_secret.name}}
+              key: {{.Values.ssl.jetty_keystore_password_secret.key}}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 500Mi
+        volumeMounts:
+          - name: ssl-keystore
+            mountPath: /usr/local/jetty/etc/keystore_mount
+        readinessProbe:
+          httpGet:
+            scheme: HTTPS
+            port: 8443
+            path: /validator
+          initialDelaySeconds: 5
+          periodSeconds: 1
+      volumes:
+      - name: ssl-keystore
+        secret:
+          secretName: {{.Values.ssl.jetty_keystore_secret.name}}
+          items:
+          - key: {{.Values.ssl.jetty_keystore_secret.key}}
+            path: keystore
+---
+# Service exposing the message validator GUI on HTTP(s)
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-validator
+  {{if .Values.use_load_balancer}}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: 10.0.1.0/24
+  {{end}}
+spec:
+  {{if .Values.use_load_balancer}}
+  type: LoadBalancer
+  ports:
+  - name: message-validator-http
+    port: {{.Values.message_validator.port.http}}
+    targetPort: 8080
+  - name: message-validator-https
+    port: {{.Values.message_validator.port.https}}
+    targetPort: 8443
+  {{else}}
+  type: NodePort
+  ports:
+  - name: message-validator-http
+    nodePort: {{.Values.message_validator.port.http}}
+    port: 8080
+  - name: message-validator-https
+    nodePort: {{.Values.message_validator.port.https}}
+    port: 8443
+  {{end}}
+  selector:
+    app: message-validator
