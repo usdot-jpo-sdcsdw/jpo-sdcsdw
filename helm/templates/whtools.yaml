@@ -46,7 +46,7 @@ spec:
         - name: CAS_SERVER_PREFIX_URL
           value: https://{{.Values.cas.hostname}}:{{.Values.cas.port.https}}/accounts/
         - name: WHTOOLS_SERVER_PREFIX_URL
-          value: https://{{.Values.whtools.hostname}}:{{.Values.whtools.port.https}}
+          value: https://{{.Values.whtools.hostname}}{{if ne .Values.whtools.port.https 443.0}}:{{.Values.whtools.port.https}}{{end}}
         - name: TRUST_KEYSTORE
           value: {{if .Values.ssl.trust_keystore}} '1' {{else}} '' {{end}}
         - name: MONGO_CONFIG_FILE
